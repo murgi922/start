@@ -22,18 +22,26 @@ public class gunControl : MonoBehaviour
 
     [Header("UI control")]
     public GameObject ui;
+
+    [Header("Gun Animation")]
+    public GameObject gunObject;
+    private Animator gunAnimator;
+    private InputAction fireAction;
     void Start()
     {
         startPosition = transform.localPosition;
         startRot = transform.localRotation;
         aimAction = InputSystem.actions.FindAction("Aim");
         mainCam = camera.GetComponent<Camera>();
+        gunAnimator = gunObject.GetComponent<Animator>();
+        fireAction = InputSystem.actions.FindAction("Fire");
     }
 
     void Update()
     {
         HideCrossHair();
         ADS();
+        Fire();
     }
     void ADS()
     {
@@ -63,6 +71,13 @@ public class gunControl : MonoBehaviour
     {
         if (aimAction.IsPressed()) ui.SetActive(false);
         if (aimAction.WasReleasedThisFrame()) ui.SetActive(true);
+    }
+    void Fire()
+    {
+        if (fireAction.IsPressed())
+        {
+            gunAnimator.SetTrigger("fire");
+        }
     }
     
 }
