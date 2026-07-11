@@ -4,8 +4,9 @@ using UnityEngine.InputSystem;
 
 public class gunControl : MonoBehaviour
 {
-    private Vector3 startPosition;
+    [Header("Gun Control")]
     public Vector3 endPosition = new Vector3(-0.41f, 0.11f, -0.19f);
+    private Vector3 startPosition;
     private Quaternion startRot;
     private Quaternion endRot = Quaternion.Euler(0f, 0f, -1.4f);
     private bool willAim = false;
@@ -13,10 +14,14 @@ public class gunControl : MonoBehaviour
     private float elapsedTime;
     InputAction aimAction;
 
+    [Header("Camera Control")]
     public GameObject camera;
     private Camera mainCam;
     private float camStartPos = 72f;
     public float camEndPos = 60f;
+
+    [Header("UI control")]
+    public GameObject ui;
     void Start()
     {
         startPosition = transform.localPosition;
@@ -27,7 +32,7 @@ public class gunControl : MonoBehaviour
 
     void Update()
     {
-
+        HideCrossHair();
         ADS();
     }
     void ADS()
@@ -53,6 +58,11 @@ public class gunControl : MonoBehaviour
             transform.localRotation = Quaternion.Lerp(endRot, startRot, percentageComplete);
             mainCam.fieldOfView = Mathf.Lerp(camEndPos, camStartPos, percentageComplete);
         }
+    }
+    void HideCrossHair()
+    {
+        if (aimAction.IsPressed()) ui.SetActive(false);
+        if (aimAction.WasReleasedThisFrame()) ui.SetActive(true);
     }
     
 }

@@ -2115,6 +2115,7 @@ MonoBehaviour:
   adsDuration: 0.1
   camera: {fileID: 217281679}
   camEndPos: 50
+  ui: {fileID: 1763766579}
 --- !u!4 &1849441405 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8ae7aa526f675154593130cfb9e0af40, type: 3}
