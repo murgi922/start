@@ -8,7 +8,7 @@ public class gunControl : MonoBehaviour
     public Vector3 endPosition = new Vector3(-0.41f, 0.11f, -0.19f);
     private Vector3 startPosition;
     private Quaternion startRot;
-    private Quaternion endRot = Quaternion.Euler(0f, 0f, -1.4f);
+    public Quaternion endRot = Quaternion.Euler(0f, 190f, 0f);
     private bool willAim = false;
     public float adsDuration = 3.0f;
     private float elapsedTime;
@@ -74,10 +74,11 @@ public class gunControl : MonoBehaviour
     }
     void Fire()
     {
-        if (fireAction.IsPressed())
+        if (fireAction.triggered)
         {
-            gunAnimator.SetTrigger("fire");
+            gunAnimator.SetTrigger("Fire");
         }
+        
     }
     
 }
