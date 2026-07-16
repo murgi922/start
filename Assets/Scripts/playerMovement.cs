@@ -1,4 +1,5 @@
 using System.Net;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -38,6 +39,11 @@ public class playerMovement : MonoBehaviour
     public float jumpSpeedMultiplier = 1.0f;
     public float airResistance = 0.0f;
     private float groundSpeed;
+    public float highJumpMultiplier = 2.0f;
+    private bool jumpedOnce = false;
+    private float jumpDelay = 0.2f;
+    private float elapsedTime = 0.0f;
+    private Vector3 flatVel;
 
     [Header("Crouch")]
     public float crouchPlayerHeightMultiplier = 0.5f;
@@ -61,9 +67,23 @@ public class playerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (jumpAction.WasPressedThisFrame() && grounded)
+        elapsedTime += Time.deltaTime;
+        if (elapsedTime > jumpDelay)
+        {
+            jumpedOnce = false;
+            elapsedTime = 0.0f;
+        }
+        if (jumpAction.WasPressedThisFrame() && grounded && !jumpedOnce)
         {
             Jump();
+            jumpedOnce=true;
+            elapsedTime=0.0f;
+        }
+        else if (jumpAction.IsInProgress() && grounded && !jumpedOnce)
+        {
+            Jump();
+            jumpedOnce = true;
+            elapsedTime=0.0f;
         }
         
         if (crouchAction.WasPressedThisFrame())
@@ -78,10 +98,11 @@ public class playerMovement : MonoBehaviour
             Crouching();
         else
             universalDrag = groundDrag;
-
+        
     }
     private void FixedUpdate()
     {
+        flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         GroundJumpMech(universalDrag);
         if (!crouchAction.IsInProgress())
         {
@@ -136,20 +157,14 @@ public class playerMovement : MonoBehaviour
             }
             else
             {
-                
-                Vector3 flatVel = new Vector3 (rb.linearVelocity.x, 0.0f, rb.linearVelocity.z);
                 tempMaxSpeed = flatVel.magnitude;
             }
-            
-            
-            
         }
         else
         {
             rb.linearDamping = 0f;
             LimitSpeed(tempMaxSpeed * jumpSpeedMultiplier);
         }
-        
     }
     private void Movement(float multiplier, float moveSpeed)
     {
@@ -163,8 +178,6 @@ public class playerMovement : MonoBehaviour
     }
     private void LimitSpeed(float speed)
     {
-        Vector3 flatVel = new Vector3 (rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
         if (flatVel.magnitude > speed)
         {
             Vector3 limitedVel = flatVel.normalized * speed;
@@ -173,7 +186,20 @@ public class playerMovement : MonoBehaviour
     }
     private void Jump()
     {
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        float verticalVel = rb.linearVelocity.y;
+        if (flatVel.magnitude > 8.0f)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * (jumpForce + (Mathf.Abs(verticalVel) * highJumpMultiplier)), ForceMode.Impulse);
+            Debug.Log("high Jump");
+        }
+        else
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            Debug.Log("normal Jump");
+        }
+        
     }
     private void AntiGravity()
     {
