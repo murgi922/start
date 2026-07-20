@@ -191,13 +191,11 @@ public class playerMovement : MonoBehaviour
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * (jumpForce + (Mathf.Abs(verticalVel) * highJumpMultiplier)), ForceMode.Impulse);
-            Debug.Log("high Jump");
         }
         else
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            Debug.Log("normal Jump");
         }
         
     }

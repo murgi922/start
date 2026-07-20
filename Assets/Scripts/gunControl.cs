@@ -27,6 +27,15 @@ public class gunControl : MonoBehaviour
     public GameObject gunObject;
     private Animator gunAnimator;
     private InputAction fireAction;
+
+    [Header("Raycast")]
+    public Transform cameraTransform;
+    private RaycastHit gunHit;
+
+    [Header("Muzzle Flash")]
+    public ParticleSystem gunParticleSystem;
+    
+
     void Start()
     {
         startPosition = transform.localPosition;
@@ -77,8 +86,12 @@ public class gunControl : MonoBehaviour
         if (fireAction.triggered)
         {
             gunAnimator.SetTrigger("Fire");
+            Physics.Raycast(cameraTransform.position, cameraTransform.forward, out gunHit, Mathf.Infinity);
+            if (gunHit.rigidbody != null)
+            {
+                gunHit.rigidbody.AddForceAtPosition(cameraTransform.forward * 10f, gunHit.point, ForceMode.Impulse);
+            }
+            gunParticleSystem.Play();
         }
-        
     }
-    
 }
