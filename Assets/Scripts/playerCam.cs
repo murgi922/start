@@ -14,8 +14,7 @@ public class playerCam : MonoBehaviour
     private Vector2 look_crd;
     private float xRot;
     private float yRot;
-    private float xRotGun;
-    private float yRotGun;
+    private bool once = true;
 
 
     private void Start()
@@ -25,10 +24,7 @@ public class playerCam : MonoBehaviour
         lookAction = InputSystem.actions.FindAction("Look");
         xRot = transform.rotation.eulerAngles.x;
         yRot = transform.rotation.eulerAngles.y;
-        xRotGun = gunOrientation.rotation.eulerAngles.x;
-        yRotGun = gunOrientation.rotation.eulerAngles.y;
         gunOrientation.position = cameraPos.position;
-        
     }
 
     private void Update()
@@ -39,15 +35,14 @@ public class playerCam : MonoBehaviour
         xRot -= look_crd.x * sensitivity * sensitivity_multiplier;
         yRot += look_crd.y * sensitivity * sensitivity_multiplier;
         xRot = Mathf.Clamp(xRot, -90f, 90f);
-
-        xRotGun -= look_crd.x * sensitivity * sensitivity_multiplier;
-        yRotGun += look_crd.y * sensitivity * sensitivity_multiplier;
-        xRotGun = Mathf.Clamp(xRot, -90f, 90f);
+        if (once)
+        { 
+            xRot = 0; 
+            once = false;
+        }
 
         transform.rotation = Quaternion.Euler(xRot, yRot, 0);
         gunOrientation.rotation = Quaternion.Euler(xRot, yRot, 0);
         orientation.transform.rotation = Quaternion.Euler(0, yRot, 0);
-
-
     }
 }

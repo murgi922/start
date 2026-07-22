@@ -13,6 +13,8 @@ public class gunControl : MonoBehaviour
     public float adsDuration = 3.0f;
     private float elapsedTime;
     InputAction aimAction;
+    public float fireCoolDwn = 0.1f;
+    private float fireTime = 0.0f;
 
     [Header("Camera Control")]
     public GameObject camera;
@@ -83,7 +85,8 @@ public class gunControl : MonoBehaviour
     }
     void Fire()
     {
-        if (fireAction.triggered)
+        fireTime += Time.deltaTime;
+        if (fireAction.triggered && fireTime > fireCoolDwn)
         {
             gunAnimator.SetTrigger("Fire");
             Physics.Raycast(cameraTransform.position, cameraTransform.forward, out gunHit, Mathf.Infinity);
@@ -92,6 +95,7 @@ public class gunControl : MonoBehaviour
                 gunHit.rigidbody.AddForceAtPosition(cameraTransform.forward * 10f, gunHit.point, ForceMode.Impulse);
             }
             gunParticleSystem.Play();
+            fireTime = 0.0f;
         }
     }
 }
