@@ -36,8 +36,9 @@ public class gunControl : MonoBehaviour
 
     [Header("Muzzle Flash")]
     public ParticleSystem gunParticleSystem;
-    
 
+    [Header("Firing Sound")]
+    public AudioSource gunSound;
     void Start()
     {
         startPosition = transform.localPosition;
@@ -96,6 +97,7 @@ public class gunControl : MonoBehaviour
             }
             gunParticleSystem.Play();
             fireTime = 0.0f;
+            gunSound.Play();
         }
     }
 }
