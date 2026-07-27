@@ -97,6 +97,7 @@ public class gunControl : MonoBehaviour
             }
             gunParticleSystem.Play();
             fireTime = 0.0f;
+            gunSound.pitch = Random.Range(0.9f, 1.5f);
             gunSound.Play();
         }
     }

@@ -67,6 +67,10 @@ public class playerMovement : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log("Flat Velocity: " + flatVel.magnitude);
+        Debug.Log("TempMaxSpeed: " + tempMaxSpeed);
+
+
         elapsedTime += Time.deltaTime;
         if (elapsedTime > jumpDelay)
         {
@@ -103,7 +107,7 @@ public class playerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        GroundJumpMech(universalDrag);
+        
         if (!crouchAction.IsInProgress())
         {
             if (sprintAction.IsInProgress())
@@ -115,9 +119,8 @@ public class playerMovement : MonoBehaviour
         {
             RunWalkControl(crouchSpeed);
         }
-        if (grounded)
-            AntiGravity();
-        
+        if (grounded) AntiGravity();
+        GroundJumpMech(universalDrag);
     }
     private void RunWalkControl(float speed)
     {
@@ -163,6 +166,7 @@ public class playerMovement : MonoBehaviour
         else
         {
             rb.linearDamping = 0f;
+            if (tempMaxSpeed < 1f) tempMaxSpeed = 2f;
             LimitSpeed(tempMaxSpeed * jumpSpeedMultiplier);
         }
     }
@@ -174,14 +178,16 @@ public class playerMovement : MonoBehaviour
         moveDirection.z = yMove;
         //moveDirection = (orientation.forward * moveDirection.z) + (orientation.right * moveDirection.x);
         moveDirection = Vector3.ProjectOnPlane(orientation.forward, hit.normal) * moveDirection.z + Vector3.ProjectOnPlane(orientation.right, hit.normal) * moveDirection.x;
-        rb.AddForce(10f * moveSpeed * multiplier * moveDirection.normalized, ForceMode.Force);
+        rb.AddForce(10f * moveSpeed * multiplier * moveDirection.normalized * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        
     }
     private void LimitSpeed(float speed)
     {
         if (flatVel.magnitude > speed)
         {
             Vector3 limitedVel = flatVel.normalized * speed;
-            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+            Vector3 newVel = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+            rb.linearVelocity = newVel;
         }
     }
     private void Jump()
