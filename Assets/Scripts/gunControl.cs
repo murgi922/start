@@ -37,6 +37,8 @@ public class gunControl : MonoBehaviour
     [Header("Visual Effects")]
     public ParticleSystem gunParticleSystem;
     public ParticleSystem spark;
+    public Transform barrelTipTransform;
+    public ParticleSystem bulletEffect;
 
     [Header("Firing Sound")]
     public AudioSource gunSound;
@@ -91,7 +93,9 @@ public class gunControl : MonoBehaviour
         if (fireAction.triggered && fireTime > fireCoolDwn)
         {
             gunAnimator.SetTrigger("Fire");
-            Physics.Raycast(cameraTransform.position, cameraTransform.forward, out gunHit, Mathf.Infinity);
+            bool didHit = false;
+            Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+            didHit = Physics.Raycast(ray, out gunHit, Mathf.Infinity);
             if (gunHit.rigidbody != null)
             {
                 gunHit.rigidbody.AddForceAtPosition(cameraTransform.forward * 10f, gunHit.point, ForceMode.Impulse);
@@ -101,6 +105,14 @@ public class gunControl : MonoBehaviour
             gunSound.pitch = Random.Range(0.9f, 1.5f);
             gunSound.Play();
             Instantiate(spark, gunHit.point, Quaternion.LookRotation(gunHit.normal));
+            Vector3 direction;
+            if (didHit)
+            {
+                direction = gunHit.point - barrelTipTransform.position;
+
+            }
+            else direction = ray.GetPoint(75) - barrelTipTransform.position;
+            Instantiate(bulletEffect, barrelTipTransform.position, Quaternion.LookRotation(direction));
         }
     }
 }

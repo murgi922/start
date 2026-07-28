@@ -11545,6 +11545,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2017496622}
+  - {fileID: 1146122576}
   m_Father: {fileID: 1841273003}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &598049715
@@ -23105,6 +23106,37 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &1146122575
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1146122576}
+  m_Layer: 0
+  m_Name: BarrelTip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1146122576
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146122575}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.091, y: 0.002285771, z: 0.511}
+  m_LocalScale: {x: 0.5409792, y: 0.5409792, z: 0.5409792}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 569295899}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1147364771
 Mesh:
   m_ObjectHideFlags: 0
@@ -37109,6 +37141,8 @@ MonoBehaviour:
   cameraTransform: {fileID: 217281680}
   gunParticleSystem: {fileID: 2017496624}
   spark: {fileID: 837724041446089909, guid: 6589546db987e4b45aedcfed526b543a, type: 3}
+  barrelTipTransform: {fileID: 1146122576}
+  bulletEffect: {fileID: 3438584451418846066, guid: f93036a87110cbf49a583186aec828c3, type: 3}
   gunSound: {fileID: 1841273005}
 --- !u!82 &1841273005
 AudioSource:
@@ -37123,7 +37157,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 7f185fe02a0ad7645b2b746e930cbf64, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.528
+  m_Volume: 0.17
   m_Pitch: 1
   Loop: 0
   Mute: 0
