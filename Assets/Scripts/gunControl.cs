@@ -34,8 +34,9 @@ public class gunControl : MonoBehaviour
     public Transform cameraTransform;
     private RaycastHit gunHit;
 
-    [Header("Muzzle Flash")]
+    [Header("Visual Effects")]
     public ParticleSystem gunParticleSystem;
+    public ParticleSystem spark;
 
     [Header("Firing Sound")]
     public AudioSource gunSound;
@@ -99,6 +100,7 @@ public class gunControl : MonoBehaviour
             fireTime = 0.0f;
             gunSound.pitch = Random.Range(0.9f, 1.5f);
             gunSound.Play();
+            Instantiate(spark, gunHit.point, Quaternion.LookRotation(gunHit.normal));
         }
     }
 }

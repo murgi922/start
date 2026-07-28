@@ -5673,7 +5673,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -37108,6 +37108,7 @@ MonoBehaviour:
   gunObject: {fileID: 1553743310}
   cameraTransform: {fileID: 217281680}
   gunParticleSystem: {fileID: 2017496624}
+  spark: {fileID: 837724041446089909, guid: 6589546db987e4b45aedcfed526b543a, type: 3}
   gunSound: {fileID: 1841273005}
 --- !u!82 &1841273005
 AudioSource:
@@ -44535,9 +44536,9 @@ ParticleSystem:
         m_RotationOrder: 4
     intensityCurve:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0.1
-      minScalar: 0.01
+      minMaxState: 3
+      scalar: 0.09
+      minScalar: 0.07
       maxCurve:
         serializedVersion: 2
         m_Curve:
