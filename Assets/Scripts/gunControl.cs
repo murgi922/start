@@ -17,6 +17,7 @@ public class gunControl : MonoBehaviour
     public float fireCoolDwn = 0.1f;
     private float fireTime = 0.0f;
 
+
     [Header("Camera Control")]
     public GameObject camera;
     private Camera mainCam;
@@ -48,7 +49,9 @@ public class gunControl : MonoBehaviour
     [Header("Firing Sound")]
     public AudioSource gunSound;
 
-    playerMovement playerScript;
+    [Header("Player Stuff")]
+    private playerMovement playerScript;
+
     void Start()
     {
         startPosition = transform.localPosition;
@@ -78,7 +81,7 @@ public class gunControl : MonoBehaviour
             float percentageComplete = elapsedTime / adsDuration;
             
             transform.localPosition = Vector3.Lerp(startPosition, endPosition, percentageComplete);
-            transform.localRotation = Quaternion.Lerp(startRot, endRot, percentageComplete);
+            if (percentageComplete <= 2) transform.localRotation = Quaternion.Lerp(startRot, endRot, percentageComplete);
             mainCam.fieldOfView = Mathf.Lerp(camStartPos, camEndPos, percentageComplete);
             if (transform.localPosition == endPosition) willAim = false;
         }
@@ -144,4 +147,5 @@ public class gunControl : MonoBehaviour
         Instantiate(spark, hitLocation, Quaternion.LookRotation(hitNormal));
         if (hitObject.GetComponent<Rigidbody>() != null) hitObject.GetComponent<Rigidbody>().AddForceAtPosition(cameraTransform.forward * 10f, hitLocation, ForceMode.Impulse);
     }
+    
 }
