@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -96,23 +97,25 @@ public class gunControl : MonoBehaviour
             bool didHit = false;
             Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
             didHit = Physics.Raycast(ray, out gunHit, Mathf.Infinity);
-            if (gunHit.rigidbody != null)
-            {
-                gunHit.rigidbody.AddForceAtPosition(cameraTransform.forward * 10f, gunHit.point, ForceMode.Impulse);
-            }
             gunParticleSystem.Play();
             fireTime = 0.0f;
             gunSound.pitch = Random.Range(0.9f, 1.5f);
             gunSound.Play();
-            Instantiate(spark, gunHit.point, Quaternion.LookRotation(gunHit.normal));
             Vector3 direction;
             if (didHit)
             {
                 direction = gunHit.point - barrelTipTransform.position;
 
             }
-            else direction = ray.GetPoint(75) - barrelTipTransform.position;
-            Instantiate(bulletEffect, barrelTipTransform.position, Quaternion.LookRotation(direction));
+            else direction = ray.GetPoint(100) - barrelTipTransform.position;
+            ParticleSystem bullet;
+            bullet = Instantiate(bulletEffect, barrelTipTransform.position, Quaternion.LookRotation(direction));
+            bullet.GetComponent<bulletScript>().AddGunRef(this);
         }
+    }
+    public void BulletHit(Vector3 hitLocation, Vector3 hitNormal, GameObject hitObject)
+    {
+        Instantiate(spark, hitLocation, Quaternion.LookRotation(hitNormal));
+        if (hitObject.GetComponent<Rigidbody>() != null) hitObject.GetComponent<Rigidbody>().AddForceAtPosition(cameraTransform.forward * 10f, hitLocation, ForceMode.Impulse);
     }
 }

@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogColor: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.201
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -1664,7 +1664,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 58951629}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Orientation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5628,7 +5628,7 @@ GameObject:
   - component: {fileID: 217281682}
   - component: {fileID: 217281681}
   - component: {fileID: 217281684}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9142,7 +9142,7 @@ Light:
   serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 2
+  m_Intensity: 0.99
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -9185,7 +9185,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 3938
+  m_ColorTemperature: 4201
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -11524,7 +11524,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 569295899}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: gunEffects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11913,7 +11913,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 616392712}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerMaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11928,15 +11928,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 616392711}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.11, y: 0.94, z: 72.81}
+  m_LocalRotation: {x: -0, y: 0.99982774, z: -0, w: 0.018562473}
+  m_LocalPosition: {x: -5.6111956, y: 6.17, z: 38.26824}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 799880318}
   - {fileID: 771517872}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 177.873, z: 0}
 --- !u!1 &617948870
 GameObject:
   m_ObjectHideFlags: 0
@@ -15957,7 +15957,7 @@ GameObject:
   - component: {fileID: 771517872}
   - component: {fileID: 771517873}
   - component: {fileID: 771517874}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16795,7 +16795,7 @@ GameObject:
   m_Component:
   - component: {fileID: 799880318}
   - component: {fileID: 799880317}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23115,7 +23115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1146122576}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BarrelTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23131,7 +23131,7 @@ Transform:
   m_GameObject: {fileID: 1146122575}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.091, y: 0.002285771, z: 0.511}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 0.5409792, y: 0.5409792, z: 0.5409792}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33713,7 +33713,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1639467199}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Camera_pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33747,7 +33747,7 @@ GameObject:
   - component: {fileID: 1643293948}
   - component: {fileID: 1643293947}
   - component: {fileID: 1643293946}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37094,7 +37094,7 @@ GameObject:
   - component: {fileID: 1841273003}
   - component: {fileID: 1841273004}
   - component: {fileID: 1841273005}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GunControl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37292,6 +37292,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8ae7aa526f675154593130cfb9e0af40, type: 3}
       propertyPath: m_Name
       value: Untitled
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8ae7aa526f675154593130cfb9e0af40, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8ae7aa526f675154593130cfb9e0af40, type: 3}
       propertyPath: m_IsActive
@@ -39452,7 +39456,7 @@ GameObject:
   - component: {fileID: 1937072335}
   - component: {fileID: 1937072337}
   - component: {fileID: 1937072336}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40171,7 +40175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1969724904}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GunOrientation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40561,7 +40565,7 @@ GameObject:
   - component: {fileID: 2017496622}
   - component: {fileID: 2017496624}
   - component: {fileID: 2017496623}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: muzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}

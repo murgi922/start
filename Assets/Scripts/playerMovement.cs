@@ -67,10 +67,6 @@ public class playerMovement : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Flat Velocity: " + flatVel.magnitude);
-        Debug.Log("TempMaxSpeed: " + tempMaxSpeed);
-
-
         elapsedTime += Time.deltaTime;
         if (elapsedTime > jumpDelay)
         {
