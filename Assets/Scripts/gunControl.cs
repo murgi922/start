@@ -40,9 +40,15 @@ public class gunControl : MonoBehaviour
     public ParticleSystem spark;
     public Transform barrelTipTransform;
     public ParticleSystem bulletEffect;
+    [SerializeField] private float bulletSpread = 1f;
+    [SerializeField] private float aimBulletSpread = 0.1f;
+    private float tempBullSpread;
+    
 
     [Header("Firing Sound")]
     public AudioSource gunSound;
+
+    playerMovement playerScript;
     void Start()
     {
         startPosition = transform.localPosition;
@@ -51,6 +57,7 @@ public class gunControl : MonoBehaviour
         mainCam = camera.GetComponent<Camera>();
         gunAnimator = gunObject.GetComponent<Animator>();
         fireAction = InputSystem.actions.FindAction("Fire");
+        playerScript = GetComponentInParent<playerMovement>();
     }
 
     void Update()
@@ -58,10 +65,12 @@ public class gunControl : MonoBehaviour
         HideCrossHair();
         ADS();
         Fire();
+        
     }
     void ADS()
     {
         if (aimAction.IsPressed()) willAim = true;
+        
         if (willAim && aimAction.IsInProgress())
         {
             if (aimAction.WasPerformedThisFrame()) elapsedTime = 0.0f;
@@ -81,6 +90,16 @@ public class gunControl : MonoBehaviour
             transform.localPosition = Vector3.Lerp(endPosition, startPosition, percentageComplete);
             transform.localRotation = Quaternion.Lerp(endRot, startRot, percentageComplete);
             mainCam.fieldOfView = Mathf.Lerp(camEndPos, camStartPos, percentageComplete);
+        }
+        if (aimAction.IsInProgress())
+        {
+            tempBullSpread = aimBulletSpread;
+            playerScript.isAiming = true;
+        }
+        else
+        {
+            tempBullSpread = bulletSpread;
+            playerScript.isAiming = false;
         }
     }
     void HideCrossHair()
@@ -109,7 +128,14 @@ public class gunControl : MonoBehaviour
             }
             else direction = ray.GetPoint(100) - barrelTipTransform.position;
             ParticleSystem bullet;
-            bullet = Instantiate(bulletEffect, barrelTipTransform.position, Quaternion.LookRotation(direction));
+            Vector3 bulletSpreadVect = Vector3.zero;
+            bulletSpreadVect.x = Random.Range(-1f, 1f);
+            bulletSpreadVect.y = Random.Range(-1f, 1f);
+            bulletSpreadVect.z = Random.Range(-1f, 1f);
+            float moveSpeed;
+            if (tempBullSpread == 0f) moveSpeed = 0f;
+            else moveSpeed = playerScript.moveVelocity.magnitude;
+            bullet = Instantiate(bulletEffect, barrelTipTransform.position, Quaternion.LookRotation(direction + bulletSpreadVect.normalized * (tempBullSpread + moveSpeed) * 0.01f * direction.magnitude));
             bullet.GetComponent<bulletScript>().AddGunRef(this);
         }
     }

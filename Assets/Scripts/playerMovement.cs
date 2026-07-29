@@ -20,8 +20,6 @@ public class playerMovement : MonoBehaviour
     private float xMove;
     private float yMove;
     private Vector3 moveDirection = Vector3.zero;
-    
-    
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -51,7 +49,10 @@ public class playerMovement : MonoBehaviour
     public float crouchSpeed;
     InputAction crouchAction;
     public GameObject player;
-    
+
+    [Header("Gun Stuff")]
+    public bool isAiming = false;
+    public Vector3 moveVelocity;
 
     private Rigidbody rb;
 
@@ -67,6 +68,7 @@ public class playerMovement : MonoBehaviour
 
     private void Update()
     {
+        moveVelocity = rb.linearVelocity;
         elapsedTime += Time.deltaTime;
         if (elapsedTime > jumpDelay)
         {
@@ -106,7 +108,7 @@ public class playerMovement : MonoBehaviour
         
         if (!crouchAction.IsInProgress())
         {
-            if (sprintAction.IsInProgress())
+            if (sprintAction.IsInProgress() && !isAiming)
                 RunWalkControl(sprintSpeed);
             else
                 RunWalkControl(walkSpeed);
@@ -172,10 +174,8 @@ public class playerMovement : MonoBehaviour
         yMove = moveAction.ReadValue <Vector2>().y;
         moveDirection.x = xMove;
         moveDirection.z = yMove;
-        //moveDirection = (orientation.forward * moveDirection.z) + (orientation.right * moveDirection.x);
         moveDirection = Vector3.ProjectOnPlane(orientation.forward, hit.normal) * moveDirection.z + Vector3.ProjectOnPlane(orientation.right, hit.normal) * moveDirection.x;
         rb.AddForce(10f * moveSpeed * multiplier * moveDirection.normalized * Time.fixedDeltaTime, ForceMode.VelocityChange);
-        
     }
     private void LimitSpeed(float speed)
     {
@@ -222,7 +222,7 @@ public class playerMovement : MonoBehaviour
         playerHeight = tempPlayerHeight;
         
     }
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         Vector3 endPoint = transform.position + (Vector3.down * (playerHeight * 0.5f * sphereCastMultiplier));
         Vector3 endPoint1 = transform.position + (Vector3.down * (playerHeight * 0.5f * rayCastMultiplier));
@@ -232,5 +232,5 @@ public class playerMovement : MonoBehaviour
         Gizmos.DrawLine(transform.position, endPoint1);
         Gizmos.DrawLine(transform.position, (transform.position + hit.normal));
     }
-
+    */
 }
