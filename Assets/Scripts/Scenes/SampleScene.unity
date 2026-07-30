@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 7416536dbe0334cfd888dd1beb75a9fb, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 410087040}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5769,6 +5769,73 @@ MonoBehaviour:
   orientation: {fileID: 58951629}
   gunOrientation: {fileID: 1969724904}
   cameraPos: {fileID: 1639467199}
+  swaySpeed: 20
+--- !u!1 &236341526
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 236341530}
+  - component: {fileID: 236341529}
+  - component: {fileID: 236341527}
+  m_Layer: 0
+  m_Name: Box Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &236341527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236341526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bd12e6836ff89e419c10c2102a11c75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!65 &236341529
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236341526}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 492.3, y: 1, z: 458.5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &236341530
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236341526}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -35.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &244804908
 Mesh:
   m_ObjectHideFlags: 0
@@ -9257,13 +9324,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.96436363, y: -0.014714122, z: 0.2584004, w: 0.05491387}
+  m_LocalRotation: {x: 0.99829096, y: -0.02909034, z: -0.013534597, w: 0.048844565}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 173.482, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 174.449, y: 1.7189941, z: 3.421997}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16176,6 +16243,8 @@ MonoBehaviour:
   crouchGroundDrag: 0
   crouchSpeed: 0.16
   player: {fileID: 1643293944}
+  crouchImpulse: 400
+  impulseDuration: 0.2
   isAiming: 0
   moveVelocity: {x: 0, y: 0, z: 0}
 --- !u!1 &776039942
@@ -33943,7 +34012,7 @@ GameObject:
   - component: {fileID: 1643293946}
   m_Layer: 6
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37337,7 +37406,7 @@ MonoBehaviour:
   spark: {fileID: 837724041446089909, guid: 6589546db987e4b45aedcfed526b543a, type: 3}
   barrelTipTransform: {fileID: 1146122576}
   bulletEffect: {fileID: 3438584451418846066, guid: f93036a87110cbf49a583186aec828c3, type: 3}
-  bulletSpread: 5.03
+  bulletSpread: 3
   aimBulletSpread: 0.1
   gunSound: {fileID: 1841273005}
 --- !u!82 &1841273005
@@ -47840,3 +47909,4 @@ SceneRoots:
   - {fileID: 1329102621}
   - {fileID: 1184561538}
   - {fileID: 1753400976}
+  - {fileID: 236341530}

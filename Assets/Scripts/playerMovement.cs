@@ -49,6 +49,10 @@ public class playerMovement : MonoBehaviour
     public float crouchSpeed;
     InputAction crouchAction;
     public GameObject player;
+    [SerializeField] private float crouchImpulse;
+    [SerializeField] private float impulseDuration;
+    private bool didAddImpulse = false;
+    private float tempTime = 0f;
 
     [Header("Gun Stuff")]
     public bool isAiming = false;
@@ -210,17 +214,27 @@ public class playerMovement : MonoBehaviour
     {
         player.transform.localScale = new Vector3(player.transform.localScale.x, 0.5f, player.transform.localScale.z);
         playerHeight *= crouchPlayerHeightMultiplier;
-
+        if (sprintAction.WasReleasedThisFrame() || sprintAction.IsInProgress())
+        {
+            rb.AddForce(orientation.forward.normalized * crouchImpulse * Time.deltaTime, ForceMode.VelocityChange);
+            didAddImpulse = true;
+        }
+        else didAddImpulse = false;
     }
     private void Crouching()
     {
         universalDrag = crouchGroundDrag;
+        if (didAddImpulse && tempTime < impulseDuration)
+        {
+            tempTime += Time.deltaTime;
+            rb.AddForce(orientation.forward.normalized * crouchImpulse * Time.deltaTime * Mathf.InverseLerp(0, impulseDuration, tempTime), ForceMode.VelocityChange);
+        }
     }
     private void CrouchStop()
     {
         player.transform.localScale = new Vector3(player.transform.localScale.x, 1f, player.transform.localScale.z);
         playerHeight = tempPlayerHeight;
-        
+        tempTime = 0f;
     }
     /*private void OnDrawGizmos()
     {

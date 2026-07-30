@@ -9,13 +9,12 @@ public class playerCam : MonoBehaviour
     public Transform orientation;
     public Transform gunOrientation;
     public Transform cameraPos;
-
     InputAction lookAction;
     private Vector2 look_crd;
     private float xRot;
     private float yRot;
     private bool once = true;
-
+    [SerializeField] private float swaySpeed = 10f;
 
     private void Start()
     {
@@ -40,9 +39,10 @@ public class playerCam : MonoBehaviour
             xRot = 0; 
             once = false;
         }
+        transform.rotation = Quaternion.SlerpUnclamped(transform.rotation, Quaternion.Euler(xRot, yRot, 0), Time.deltaTime * swaySpeed);
+        gunOrientation.rotation = Quaternion.SlerpUnclamped(gunOrientation.rotation, Quaternion.Euler(xRot, yRot, 0), Time.deltaTime * swaySpeed);
+        orientation.transform.rotation = Quaternion.SlerpUnclamped(orientation.transform.rotation, Quaternion.Euler(0, yRot, 0), Time.deltaTime * swaySpeed);
 
-        transform.rotation = Quaternion.Euler(xRot, yRot, 0);
-        gunOrientation.rotation = Quaternion.Euler(xRot, yRot, 0);
-        orientation.transform.rotation = Quaternion.Euler(0, yRot, 0);
+
     }
 }

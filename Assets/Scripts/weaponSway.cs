@@ -19,13 +19,11 @@ public class weaponSway : MonoBehaviour
     private Quaternion finalRot;
     private Quaternion deltaRot;
     InputAction aimAction;
-    InputAction lookAction;
     void Start()
     {
         startPosLoc = transform.localPosition;
         startRotLoc = gunTransform.localRotation;
         aimAction = InputSystem.actions.FindAction("Aim");
-        lookAction = InputSystem.actions.FindAction("Look");
     }
 
     void Update()
@@ -44,11 +42,8 @@ public class weaponSway : MonoBehaviour
         {
             transform.position -= Vector3.ClampMagnitude(playerRb.linearVelocity, maxSwayDistance) * Time.deltaTime;
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, targetRot, Time.deltaTime * speed);
-            //gunTransform.rotation *= Quaternion.Inverse(deltaRot);
         }
-        
-
         transform.localPosition = Vector3.LerpUnclamped(transform.localPosition, startPosLoc, Time.deltaTime * springBackSpeed);
-        //gunTransform.localRotation = Quaternion.SlerpUnclamped(gunTransform.localRotation, startRotLoc, Time.deltaTime * springBackSpeed);
     }
+
 }
