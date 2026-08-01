@@ -140,6 +140,7 @@ public class gunControl : MonoBehaviour
             else moveSpeed = playerScript.moveVelocity.magnitude;
             bullet = Instantiate(bulletEffect, barrelTipTransform.position, Quaternion.LookRotation(direction + bulletSpreadVect.normalized * (tempBullSpread + moveSpeed) * 0.01f * direction.magnitude));
             bullet.GetComponent<bulletScript>().AddGunRef(this);
+            camera.GetComponentInParent<CameraShake>().FireStart();
         }
     }
     public void BulletHit(Vector3 hitLocation, Vector3 hitNormal, GameObject hitObject)
