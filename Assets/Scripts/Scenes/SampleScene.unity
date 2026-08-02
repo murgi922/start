@@ -16243,8 +16243,6 @@ MonoBehaviour:
   crouchGroundDrag: 0
   crouchSpeed: 0.16
   player: {fileID: 1643293944}
-  isToggleSprint: 0
-  isToggleCrouch: 1
   crouchImpulse: 400
   impulseDuration: 0.2
   isAiming: 0
@@ -17093,7 +17091,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  duration: 0.5
+  duration: 0.3
   magnitude: {x: 40, y: 60}
   player: {fileID: 58951629}
 --- !u!1 &821373174
