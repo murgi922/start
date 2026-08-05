@@ -2,21 +2,21 @@ using UnityEngine;
 
 public class enemyOrientation : MonoBehaviour
 {
-    private Transform player;
+    private Transform camera;
     public float rotSpeed = 10f;
     [SerializeField] private bool willLook;
     void Start()
     {
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        if (playerObject == null) Debug.LogError("Player can't be found!");
-        else player = playerObject.transform;
+        GameObject cameraObject = GameObject.FindGameObjectWithTag("MainCamera");
+        if (cameraObject == null) Debug.LogError("Camera can't be found!");
+        else camera = cameraObject.transform;
     }
 
     void Update()
     {
         if (willLook)
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(player.position - transform.position), Time.deltaTime * rotSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(camera.position - transform.position), Time.deltaTime * rotSpeed);
         }
     }
     public bool setGetWillLook(bool value)

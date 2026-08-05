@@ -6,6 +6,7 @@ public class bulletScript : MonoBehaviour
 {
     private ParticleSystem particleSystem;
     private gunControl gunControlScript;
+    private gunControlEnemy gunControlEnemy;
     private ParticleSystemRenderer particleSysRend;
     [Header("Speed Scale settings")]
     [SerializeField] private float maxSpeedScale = 0.1f;
@@ -33,9 +34,10 @@ public class bulletScript : MonoBehaviour
         percent = particleDirection.magnitude / targetDistance;
         particleSysRend.velocityScale = Mathf.Lerp(0f, maxSpeedScale, percent);
     }
-    public void AddGunRef (gunControl gun)
+    public void AddGunRef (GameObject gun)
     {
-        gunControlScript = gun;
+        gunControlScript = gun.GetComponent<gunControl>();
+        if (gunControlScript == null) gunControlEnemy = gun.GetComponent<gunControlEnemy>();
     }
     private void OnParticleCollision(GameObject other)
     {
@@ -44,6 +46,10 @@ public class bulletScript : MonoBehaviour
         {
             ParticleCollisionEvent particleCol = particleColEvents[0];
             if (gunControlScript != null)
+            {
+                gunControlScript.BulletHit(particleCol.intersection, particleCol.normal, other);
+            }
+            else if (gunControlEnemy != null)
             {
                 gunControlScript.BulletHit(particleCol.intersection, particleCol.normal, other);
             }
