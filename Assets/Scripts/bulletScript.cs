@@ -41,6 +41,10 @@ public class bulletScript : MonoBehaviour
     }
     private void OnParticleCollision(GameObject other)
     {
+        if (other.transform.root.gameObject.CompareTag("Enemy"))
+        {
+            other.transform.root.gameObject.GetComponent<enemyManager>().HitByProjectile();
+        }
         particleSystem.GetCollisionEvents(other, particleColEvents);
         if (particleColEvents.Count > 0)
         {

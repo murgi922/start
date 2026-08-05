@@ -1,0 +1,75 @@
+using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UIElements;
+
+public class enemyManager : MonoBehaviour
+{
+    [Header("Damage Related")]
+    [SerializeField]
+    [Range(0, 100)]
+    private int health;
+    [SerializeField]
+    [Range(0, 100)]
+    private int damageToTake;
+    [SerializeField, ColorUsage(true, true)] private Color enemyHitColor;
+    [SerializeField] private float colorChangeTime;
+    private Color enemyColor;
+    private HealthSystem healthSystem;
+    private bool dead = false;
+    private Transform capsule;
+    private Coroutine enemyColorChangeCoroutine;
+
+    [Header("UI")]
+    private enemyHealthBar healthBar;
+    private void Start()
+    {
+        capsule = transform.Find("EnemyMesh").Find("Capsule");
+        enemyColor = capsule.GetComponent<Renderer>().material.color;
+        healthBar = GetComponentInChildren<enemyHealthBar>();
+    }
+    private void Awake()
+    {
+        healthSystem = new HealthSystem(100);
+    }
+
+    public void HitByProjectile()
+    {
+        if (!dead)
+        {
+            if (enemyColorChangeCoroutine != null) StopCoroutine(enemyColorChangeCoroutine);
+            enemyColorChangeCoroutine = StartCoroutine(HitColorChange(enemyColor, enemyHitColor, colorChangeTime));
+            healthSystem.TakeDamage(damageToTake);
+            healthBar.SetHealth(healthSystem.GetHealth());
+            if (!healthSystem.IsAlive())
+            {
+                gameObject.GetComponentInChildren<enemyScript>().enabled = false;
+                gameObject.GetComponentInChildren<enemyOrientation>().enabled = false;
+                gameObject.GetComponentInChildren<NavMeshAgent>().enabled = false;
+                gameObject.GetComponentInChildren<Rigidbody>().freezeRotation = false;
+                gameObject.GetComponentInChildren<Rigidbody>().isKinematic = false;
+                dead = true;
+            }
+        }
+    }
+    private void OnValidate()
+    {
+        damageToTake = Mathf.Clamp(damageToTake, 0, health);
+    }
+    IEnumerator HitColorChange(Color initialColor, Color color, float timeSpan)
+    {
+        float elapsedTime = 0f;
+        float percentageComplete = 0f;
+        Renderer capsuleRenderer = capsule.GetComponent<Renderer>();
+        capsuleRenderer.material.color = color;
+        percentageComplete = 0f;
+        elapsedTime = 0f;
+        while (percentageComplete <= 1f || capsuleRenderer.material.color != initialColor)
+        {
+            elapsedTime += Time.deltaTime;
+            percentageComplete = elapsedTime / (timeSpan / 2);
+            capsuleRenderer.material.color = Color.Lerp(color, initialColor, percentageComplete);
+            yield return null;
+        }
+    }
+}
