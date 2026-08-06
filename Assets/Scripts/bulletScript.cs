@@ -41,7 +41,7 @@ public class bulletScript : MonoBehaviour
     }
     private void OnParticleCollision(GameObject other)
     {
-        if (other.transform.root.gameObject.CompareTag("Enemy"))
+        if (other.transform.root.gameObject.CompareTag("Enemy") && gunControlEnemy == null)
         {
             other.transform.root.gameObject.GetComponent<enemyManager>().HitByProjectile();
         }
@@ -55,7 +55,7 @@ public class bulletScript : MonoBehaviour
             }
             else if (gunControlEnemy != null)
             {
-                gunControlScript.BulletHit(particleCol.intersection, particleCol.normal, other);
+                gunControlEnemy.BulletHit(particleCol.intersection, particleCol.normal, other);
             }
             else Debug.LogError("gunControl script could not be accessed!");
         }

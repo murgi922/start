@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class enemyScript : MonoBehaviour
+public class enemyAIScript : MonoBehaviour
 {
     private Transform target;
     private NavMeshAgent agent;
@@ -16,5 +16,14 @@ public class enemyScript : MonoBehaviour
     private void Update()
     {
         agent.destination = target.position;
+    }
+    public void SetTarget(string targetTag)
+    {
+        GameObject temp = GameObject.FindGameObjectWithTag(targetTag);
+        if (temp != null)
+        {
+            target = temp.transform;
+        }
+        else Debug.LogError("Could not find anything with '" +  targetTag + "' tag!");
     }
 }

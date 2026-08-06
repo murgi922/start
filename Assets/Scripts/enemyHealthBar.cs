@@ -5,11 +5,8 @@ using UnityEngine.UI;
 public class enemyHealthBar : MonoBehaviour
 {
     private float healthNorm = 1;
-    private Image foreground;
-    private void Start()
-    {
-        foreground = transform.Find("Background").Find("Foreground").GetComponent<Image>();
-    }
+    [SerializeField] private Image foreground;
+
     private void Update()
     {
         foreground.fillAmount = healthNorm;

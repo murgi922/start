@@ -62,7 +62,6 @@ public class gunControl : MonoBehaviour
         fireAction = InputSystem.actions.FindAction("Fire");
         playerScript = GetComponentInParent<playerMovement>();
     }
-
     void Update()
     {
         HideCrossHair();
@@ -127,7 +126,6 @@ public class gunControl : MonoBehaviour
             if (didHit)
             {
                 direction = gunHit.point - barrelTipTransform.position;
-
             }
             else direction = ray.GetPoint(100) - barrelTipTransform.position;
             ParticleSystem bullet;

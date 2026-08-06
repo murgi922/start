@@ -16,7 +16,7 @@ public class respawn : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.transform.parent.CompareTag("Player"))
         {
             other.gameObject.transform.parent.position = playerLocation;
             other.gameObject.transform.parent.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;

@@ -52,7 +52,6 @@ public class playerMovement : MonoBehaviour
     [SerializeField] private float crouchImpulse;
     [SerializeField] private float impulseDuration;
     private bool didAddImpulse = false;
-    private float tempTime = 0f;
 
     [Header("Gun Stuff")]
     public bool isAiming = false;
@@ -220,7 +219,6 @@ public class playerMovement : MonoBehaviour
     {
         player.transform.localScale = new Vector3(player.transform.localScale.x, 1f, player.transform.localScale.z);
         playerHeight = tempPlayerHeight;
-        tempTime = 0f;
     }
     /*private void OnDrawGizmos()
     {
