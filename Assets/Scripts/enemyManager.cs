@@ -27,7 +27,6 @@ public class enemyManager : MonoBehaviour
     [SerializeField] private float fireDelay;
     [SerializeField] private float fireSpread;
     [SerializeField] private float detectionRange;
-    private bool willAggro;
     [SerializeField] private gunControlEnemy enemyGun;
     private Transform player;
 
@@ -36,21 +35,23 @@ public class enemyManager : MonoBehaviour
 
     [Header("AI")]
     [SerializeField] private enemyAIScript enemyAIScript;
+    [SerializeField] private Transform enemyOrientation;
     [SerializeField] private string targetTag;
+    [SerializeField] private float maxViewAngle;
+    private bool aggroOnce = false;
     private void Start()
     {
         enemyColor = capsule.GetComponent<Renderer>().material.color;
         healthBar = GetComponentInChildren<enemyHealthBar>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         enemyGun.IsAliveSet(true);
-        StartCoroutine(Temp());
         enemyAIScript.SetTarget(targetTag);
+        StartCoroutine(DetectPlayer());
     }
-    IEnumerator Temp()
+    IEnumerator StartFireCoroutine()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         enemyGun.Fire(player, fireDelay, fireSpread);
-        
     }
     private void Awake()
     {
@@ -64,8 +65,9 @@ public class enemyManager : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.DrawWireSphere(enemyAIScript.transform.position, detectionRange);
     }
+
     public void HitByProjectile()
     {
         if (!dead)
@@ -74,6 +76,11 @@ public class enemyManager : MonoBehaviour
             enemyColorChangeCoroutine = StartCoroutine(HitColorChange(enemyColor, enemyHitColor, colorChangeTime));
             healthSystem.TakeDamage(damageToTake);
             healthBar.SetHealth(healthSystem.GetHealth());
+            if (!aggroOnce)
+            {
+                willAggro();
+                aggroOnce = true;
+            }
             if (!healthSystem.IsAlive())
             {
                 gameObject.GetComponentInChildren<enemyAIScript>().enabled = false;
@@ -102,7 +109,34 @@ public class enemyManager : MonoBehaviour
             yield return null;
         }
     }
+    IEnumerator DetectPlayer()
+    {
+        while (!dead && !aggroOnce)
+        {
+            RaycastHit hit;
+            Vector3 direction = player.position - enemyAIScript.transform.position;
+            bool didHit = Physics.Raycast(enemyAIScript.transform.position, direction, out hit, detectionRange);
+            if (didHit)
+            {
+                if (hit.transform.CompareTag("Player"))
+                {
+                    if (Mathf.Abs(Vector3.Angle(direction, enemyOrientation.forward)) < maxViewAngle)
+                    {
+                        willAggro();
+                        aggroOnce = true;
+                    }
+                }
+            }
+            yield return null;
+        }
+    }
 
+    private void willAggro()
+    {
+        Debug.Log("Will aggro called.");
+        StartCoroutine(StartFireCoroutine());
+        enemyAIScript.SetWillPatrol(false);
+    }
     public float GetSpread()
     { return fireSpread; }
     

@@ -39,9 +39,9 @@ public class playerCam : MonoBehaviour
             xRot = 0; 
             once = false;
         }
-        transform.rotation = Quaternion.SlerpUnclamped(transform.rotation, Quaternion.Euler(xRot, yRot, 0), Time.deltaTime * swaySpeed);
-        gunOrientation.rotation = Quaternion.SlerpUnclamped(gunOrientation.rotation, Quaternion.Euler(xRot, yRot, 0), Time.deltaTime * swaySpeed);
-        orientation.transform.rotation = Quaternion.SlerpUnclamped(orientation.transform.rotation, Quaternion.Euler(0, yRot, 0), Time.deltaTime * swaySpeed);
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(xRot, yRot, 0), Time.deltaTime * swaySpeed);
+        gunOrientation.rotation = Quaternion.Lerp(gunOrientation.rotation, Quaternion.Euler(xRot, yRot, 0), Time.deltaTime * swaySpeed);
+        orientation.transform.rotation = Quaternion.Lerp(orientation.transform.rotation, Quaternion.Euler(0, yRot, 0), Time.deltaTime * swaySpeed);
 
 
     }

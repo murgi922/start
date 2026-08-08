@@ -5,18 +5,36 @@ public class enemyAIScript : MonoBehaviour
 {
     private Transform target;
     private NavMeshAgent agent;
+    [SerializeField] private Transform patrol1;
+    [SerializeField] private Transform patrol2;
+    [SerializeField] private bool willPatrol;
+    [SerializeField] private enemyOrientation orientation;
+    private GameObject player;
     private void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player");
         if (player == null) Debug.LogError("Could not find player!");
-        else target = player.transform;
         agent = GetComponent<NavMeshAgent>();
-        agent.destination = target.position;
     }
+    
     private void Update()
     {
+        if (willPatrol)
+        {
+            orientation.SetGetWillLook(false);
+            if (target != patrol1 && target != patrol2) target = patrol1;
+            if (agent.remainingDistance <= agent.stoppingDistance && target == patrol1) target = patrol2;
+            else if (agent.remainingDistance <= agent.stoppingDistance && target == patrol2) target = patrol1;
+        }
+        else
+        {
+            orientation.SetGetWillLook(true);
+            target = player.transform;
+        }
         agent.destination = target.position;
     }
+    public void SetWillPatrol(bool patrol)
+    { willPatrol = patrol; }
     public void SetTarget(string targetTag)
     {
         GameObject temp = GameObject.FindGameObjectWithTag(targetTag);

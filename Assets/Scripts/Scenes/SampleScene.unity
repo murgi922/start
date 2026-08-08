@@ -28466,6 +28466,37 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &1015504383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1015504384}
+  m_Layer: 0
+  m_Name: Patrol1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1015504384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015504383}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.68, y: 0, z: 10.06}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6958424459737582705}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1031887589
 Mesh:
   m_ObjectHideFlags: 0
@@ -41600,6 +41631,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 673216775}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1716146370
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1716146371}
+  m_Layer: 0
+  m_Name: Patrol2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1716146371
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716146370}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.31, y: 0, z: -24.72}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6958424459737582705}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1722858958
 GameObject:
@@ -54838,6 +54900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   rotSpeed: 10
+  rb: {fileID: 2581269448958908007}
   willLook: 1
 --- !u!4 &1814542706614293361
 Transform:
@@ -69619,6 +69682,8 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8162204548753381887}
+  - {fileID: 1015504384}
+  - {fileID: 1716146371}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6958424459737582706
@@ -69643,7 +69708,9 @@ MonoBehaviour:
   detectionRange: 20
   enemyGun: {fileID: 7022293843189268596}
   enemyAIScript: {fileID: 7930710769440225498}
+  enemyOrientation: {fileID: 1814542706614293361}
   targetTag: Player
+  maxViewAngle: 60
 --- !u!1 &7022293843189268594
 GameObject:
   m_ObjectHideFlags: 0
@@ -69719,7 +69786,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -69771,6 +69838,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2017465b91ca8ad4fa3ff9ef03eaab8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  fireSound: {fileID: 7022293843189268595}
   muzzleFlash: {fileID: 992711068}
   bulletObject: {fileID: 2728148617294809489}
   spark: {fileID: 2337116779842795376}
@@ -69913,6 +69981,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20e7acb0ccea5d943b3fa4a95627bf06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  patrol1: {fileID: 1015504384}
+  patrol2: {fileID: 1716146371}
+  willPatrol: 1
+  orientation: {fileID: 701431466365554728}
 --- !u!4 &8162204548753381887
 Transform:
   m_ObjectHideFlags: 0

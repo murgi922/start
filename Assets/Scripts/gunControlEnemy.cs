@@ -9,6 +9,7 @@ public class gunControlEnemy : MonoBehaviour
     private Vector3 debugEndPos;
     private Vector3 debugStartPos;
     private bool isAlive;
+    [SerializeField] private AudioSource fireSound;
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private GameObject bulletObject;
     [SerializeField] private GameObject spark;
@@ -20,14 +21,24 @@ public class gunControlEnemy : MonoBehaviour
     }
     public void Fire(Transform target, float delay, float spread)
     {
-        if (fireCoroutine != null) StopCoroutine(fireCoroutine);
-        fireCoroutine = StartCoroutine(FireCoroutine(target, delay, spread));
+        if (isAlive)
+        {
+            if (fireCoroutine != null) StopCoroutine(fireCoroutine);
+            fireCoroutine = StartCoroutine(FireCoroutine(target, delay, spread));
+        }
+        else
+        {
+            StopAllCoroutines();
+        }
+        
     }
     IEnumerator FireCoroutine (Transform target, float delay, float spread)
     {
         RaycastHit hit;
         do
         {
+            fireSound.pitch = Random.Range(0.9f, 1.5f);
+            fireSound.Play();
             bool didHit;
             Ray ray = new Ray(barrelTip.position, (target.position - barrelTip.position));
             didHit = Physics.Raycast(ray, out hit, Mathf.Infinity);
@@ -44,7 +55,6 @@ public class gunControlEnemy : MonoBehaviour
             bullet.GetComponent<bulletScript>().AddGunRef(this.gameObject);
             yield return new WaitForSeconds(delay);
         } while (isAlive);
-        Debug.Log("Player HIT!");
     }
 
     public void BulletHit(Vector3 hitLocation, Vector3 hitNormal, GameObject hitObject)
