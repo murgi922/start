@@ -60,8 +60,20 @@ public class gunControlEnemy : MonoBehaviour
     public void BulletHit(Vector3 hitLocation, Vector3 hitNormal, GameObject hitObject)
     {
         Instantiate(spark, hitLocation, Quaternion.LookRotation(hitNormal)).GetComponent<ParticleSystem>().Play();
-        if (hitObject.GetComponent<Rigidbody>() != null && !hitObject.CompareTag("Player"))
-        { hitObject.GetComponent<Rigidbody>().AddForceAtPosition((debugEndPos - debugStartPos) * 10f, hitLocation, ForceMode.Impulse); }
+        if (hitObject.GetComponent<Rigidbody>() != null)
+        { 
+            if (hitObject.CompareTag("Player"))
+            {
+                if(!hitObject.transform.root.GetComponent<playerManager>().IsAlive())
+                {
+                    hitObject.GetComponent<Rigidbody>().AddForceAtPosition((debugEndPos - debugStartPos) * 10f, hitLocation, ForceMode.Impulse);
+                }
+            }
+            else
+            {
+                hitObject.GetComponent<Rigidbody>().AddForceAtPosition((debugEndPos - debugStartPos) * 10f, hitLocation, ForceMode.Impulse);
+            }
+        }
     }
     private Vector3 BullSpread(float spread)
     {

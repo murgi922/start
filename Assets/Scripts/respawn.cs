@@ -16,11 +16,14 @@ public class respawn : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.transform.parent.CompareTag("Player"))
+        if (other.gameObject.transform.parent != null)
         {
-            other.gameObject.transform.parent.position = playerLocation;
-            other.gameObject.transform.parent.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-            Debug.Log("Overlap!");
+            if (other.gameObject.transform.parent.CompareTag("Player"))
+            {
+                other.transform.root.GetComponent<playerManager>().KillPlayer();
+                //other.gameObject.transform.parent.position = playerLocation;
+                //other.gameObject.transform.parent.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            }
         }
     }
 }

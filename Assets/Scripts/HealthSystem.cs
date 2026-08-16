@@ -1,7 +1,7 @@
 public class HealthSystem
 {
-    private float health;
-    private float maxHealth;
+    private int health;
+    private int maxHealth;
     public HealthSystem(int health)
     {
         this.health = health;
@@ -12,11 +12,11 @@ public class HealthSystem
         this.health = health;
         this.maxHealth = maxHealth;
     }
-    public float GetHealth()
+    public int GetHealth()
     {
         return health;
     }
-    public float GetMaxHealth()
+    public int GetMaxHealth()
     {
         return maxHealth;
     }

@@ -14,6 +14,7 @@ public class playerMovement : MonoBehaviour
     private float universalDrag;
     public Transform orientation;
     private float tempMaxSpeed;
+    [SerializeField] private float airSpeedThreshold;
 
     InputAction moveAction;
     InputAction sprintAction;
@@ -56,6 +57,15 @@ public class playerMovement : MonoBehaviour
     [Header("Gun Stuff")]
     public bool isAiming = false;
     public Vector3 moveVelocity;
+
+    [Header("Wall run")]
+    [SerializeField] private float wallRunSpeed;
+    [SerializeField] private float wallJumpSpeed;
+    [SerializeField, Range(0f, 2f)] private float wallDetectLength;
+    [SerializeField] private float wallHugForce;
+    private bool isWallRun = false;
+    private Vector3 wallNormal;
+    
 
     private Rigidbody rb;
 
@@ -121,6 +131,7 @@ public class playerMovement : MonoBehaviour
             RunWalkControl(crouchSpeed);
         }
         if (grounded) AntiGravity();
+        else WallRun();
         GroundJumpMech(universalDrag);
     }
     private void RunWalkControl(float speed)
@@ -132,9 +143,9 @@ public class playerMovement : MonoBehaviour
         }
         airSpeedMultiplier = Mathf.Clamp(airSpeedMultiplier, 0.0f, 1.0f);
         if (grounded)
-            Movement(1.0f, speed);
+            Movement(1.0f, speed, false);
         else
-            Movement(airSpeedMultiplier, groundSpeed);
+            Movement(airSpeedMultiplier, groundSpeed, true);
     }
     
     private void GroundJumpMech(float groundDrag)
@@ -167,22 +178,31 @@ public class playerMovement : MonoBehaviour
         else
         {
             rb.linearDamping = 0f;
-            if (tempMaxSpeed < 1f) tempMaxSpeed = 2f;
+            if (tempMaxSpeed < 3f) tempMaxSpeed = 3f;
             LimitSpeed(tempMaxSpeed * jumpSpeedMultiplier);
         }
     }
-    private void Movement(float multiplier, float moveSpeed)
+    private void Movement(float multiplier, float moveSpeed, bool isInAir)
     {
         xMove = moveAction.ReadValue<Vector2>().x;
         yMove = moveAction.ReadValue <Vector2>().y;
         moveDirection.x = xMove;
         moveDirection.z = yMove;
         moveDirection = Vector3.ProjectOnPlane(orientation.forward, hit.normal) * moveDirection.z + Vector3.ProjectOnPlane(orientation.right, hit.normal) * moveDirection.x;
-        rb.AddForce(10f * moveSpeed * multiplier * moveDirection.normalized * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        float tempMultiplier = multiplier;
+        float moveSpeedTemp = moveSpeed;
+        if (isInAir && moveSpeedTemp < airSpeedThreshold)
+        {
+            tempMultiplier = 0.5f;
+            moveSpeedTemp = airSpeedThreshold;
+        }
+        else if (isInAir && flatVel.magnitude >= airSpeedThreshold) tempMultiplier = multiplier;
+
+        rb.AddForce(10f * moveSpeedTemp * tempMultiplier * moveDirection.normalized * Time.fixedDeltaTime, ForceMode.VelocityChange);
     }
     private void LimitSpeed(float speed)
     {
-        if (flatVel.magnitude > speed)
+        if (flatVel.magnitude > speed && flatVel.magnitude > 3)
         {
             Vector3 limitedVel = flatVel.normalized * speed;
             Vector3 newVel = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
@@ -220,15 +240,32 @@ public class playerMovement : MonoBehaviour
         player.transform.localScale = new Vector3(player.transform.localScale.x, 1f, player.transform.localScale.z);
         playerHeight = tempPlayerHeight;
     }
-    /*private void OnDrawGizmos()
+    private void WallRun()
     {
-        Vector3 endPoint = transform.position + (Vector3.down * (playerHeight * 0.5f * sphereCastMultiplier));
+        RaycastHit wallHit;
+        if (Physics.Raycast(orientation.transform.position, orientation.transform.right, out wallHit, wallDetectLength)) isWallRun = true;
+        else if (Physics.Raycast(orientation.transform.position, -(orientation.transform.right), out wallHit, wallDetectLength)) isWallRun = true;
+        else isWallRun = false;
+        //isWallRun = Physics.Raycast(orientation.transform.position, -(orientation.transform.right), out wallHit, wallDetectLength);
+        if (isWallRun)
+        {
+            //rb.AddForce(-wallHit.normal * wallHugForce * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            //airSpeedMultiplier = 1f;
+        }
+
+    }
+    private void OnDrawGizmos()
+    {
+        /*Vector3 endPoint = transform.position + (Vector3.down * (playerHeight * 0.5f * sphereCastMultiplier));
         Vector3 endPoint1 = transform.position + (Vector3.down * (playerHeight * 0.5f * rayCastMultiplier));
         Gizmos.color = Color.red;
         //Gizmos.DrawWireSphere(endPoint, sphereCastRadius);
         Gizmos.DrawLine(transform.position, (transform.position + moveDirection));
         Gizmos.DrawLine(transform.position, endPoint1);
-        Gizmos.DrawLine(transform.position, (transform.position + hit.normal));
+        Gizmos.DrawLine(transform.position, (transform.position + hit.normal));*/
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(orientation.transform.position, ((orientation.transform.position + orientation.transform.right * wallDetectLength)));
+        Gizmos.DrawLine(orientation.transform.position, ((orientation.transform.position - orientation.transform.right * wallDetectLength)));
     }
-    */
+    
 }

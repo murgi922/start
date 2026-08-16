@@ -133,9 +133,13 @@ public class enemyManager : MonoBehaviour
 
     private void willAggro()
     {
-        Debug.Log("Will aggro called.");
         StartCoroutine(StartFireCoroutine());
         enemyAIScript.SetWillPatrol(false);
+    }
+    private void DeAggro()
+    {
+        StopCoroutine(StartFireCoroutine());
+        enemyAIScript.SetWillPatrol(true);
     }
     public float GetSpread()
     { return fireSpread; }

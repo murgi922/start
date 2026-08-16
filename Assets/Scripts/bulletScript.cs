@@ -59,6 +59,10 @@ public class bulletScript : MonoBehaviour
             }
             else Debug.LogError("gunControl script could not be accessed!");
         }
+        if (other.CompareTag("Player"))
+        {
+            other.transform.root.GetComponent<playerManager>().PlayerHit();
+        }
         Destroy(this.gameObject);
         
     }
