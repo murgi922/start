@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Net;
 using System.Runtime.CompilerServices;
 using TMPro;
@@ -59,13 +61,54 @@ public class playerMovement : MonoBehaviour
     public Vector3 moveVelocity;
 
     [Header("Wall run")]
-    [SerializeField] private float wallRunSpeed;
-    [SerializeField] private float wallJumpSpeed;
+    [SerializeField] private float wallRunForce;
+    [SerializeField] private float wallJumpForce;
     [SerializeField, Range(0f, 2f)] private float wallDetectLength;
     [SerializeField] private float wallHugForce;
-    private bool isWallRun = false;
-    private Vector3 wallNormal;
+    [SerializeField] private float initialUpForce;
+    [SerializeField] public float sideWallJump;
+    [SerializeField] public float upWallJump;
+    [SerializeField] private float maxWallRunSpeed;
+    [SerializeField] private float minSpeed;
     
+    RaycastHit wallHit = default;
+    private Vector3 wallNormal;
+    private bool isWallRun = false;
+    public Action<bool> WallRunAction;
+    public bool IsWallRun
+    {
+        get => isWallRun;
+        set
+        {
+            if (isWallRun != value)
+            {
+                isWallRun = value;
+                WallRunAction?.Invoke(isWallRun);
+            }
+        }
+    }
+    
+    private void OnEnable()
+    {
+        WallRunAction += InitiateWallRun;
+    }
+    private void OnDisable()
+    {
+        WallRunAction -= InitiateWallRun;
+    }
+    private void InitiateWallRun(bool isWallRunning)
+    {
+        if (isWallRunning)
+        {
+            crouchAction.Disable();
+            StartCoroutine(WallRun(wallHit));
+        }
+        else
+        {
+            crouchAction.Enable();
+            StopCoroutine(WallRun(wallHit));
+        }
+    }
 
     private Rigidbody rb;
 
@@ -81,58 +124,62 @@ public class playerMovement : MonoBehaviour
 
     private void Update()
     {
-        moveVelocity = rb.linearVelocity;
-        elapsedTime += Time.deltaTime;
-        if (elapsedTime > jumpDelay)
+        if (!IsWallRun)
         {
-            jumpedOnce = false;
-            elapsedTime = 0.0f;
+            moveVelocity = rb.linearVelocity;
+            elapsedTime += Time.deltaTime;
+            if (elapsedTime > jumpDelay)
+            {
+                jumpedOnce = false;
+                elapsedTime = 0.0f;
+            }
+            if (jumpAction.WasPressedThisFrame() && grounded && !jumpedOnce)
+            {
+                Jump();
+                jumpedOnce = true;
+                elapsedTime = 0.0f;
+            }
+            else if (jumpAction.IsInProgress() && grounded && !jumpedOnce)
+            {
+                Jump();
+                jumpedOnce = true;
+                elapsedTime = 0.0f;
+            }
+            if (crouchAction.WasPressedThisFrame())
+            {
+                CrouchStart();
+            }
+            else if (crouchAction.WasReleasedThisFrame())
+            {
+                CrouchStop();
+            }
+            if (crouchAction.IsInProgress())
+                Crouching();
+            else
+                universalDrag = groundDrag;
         }
-        if (jumpAction.WasPressedThisFrame() && grounded && !jumpedOnce)
-        {
-            Jump();
-            jumpedOnce=true;
-            elapsedTime=0.0f;
-        }
-        else if (jumpAction.IsInProgress() && grounded && !jumpedOnce)
-        {
-            Jump();
-            jumpedOnce = true;
-            elapsedTime=0.0f;
-        }
-        
-        if (crouchAction.WasPressedThisFrame())
-        {
-            CrouchStart();
-        }
-        else if (crouchAction.WasReleasedThisFrame())
-        {
-            CrouchStop();
-        }
-        if (crouchAction.IsInProgress())
-            Crouching();
-        else
-            universalDrag = groundDrag;
-        
     }
     private void FixedUpdate()
     {
+        GroundCheck();
         flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        
-        if (!crouchAction.IsInProgress())
+        if (!IsWallRun)
         {
-            if (sprintAction.IsInProgress() && !isAiming)
-                RunWalkControl(sprintSpeed);
+            if (!crouchAction.IsInProgress())
+            {
+                if (sprintAction.IsInProgress() && !isAiming)
+                    RunWalkControl(sprintSpeed);
+                else
+                    RunWalkControl(walkSpeed);
+            }
             else
-                RunWalkControl(walkSpeed);
+            {
+                RunWalkControl(crouchSpeed);
+            }
+            if (grounded) AntiGravity();
+            GroundJumpMech(universalDrag);
         }
-        else
-        {
-            RunWalkControl(crouchSpeed);
-        }
-        if (grounded) AntiGravity();
-        else WallRun();
-        GroundJumpMech(universalDrag);
+        WallRunDetect();
     }
     private void RunWalkControl(float speed)
     {
@@ -150,10 +197,6 @@ public class playerMovement : MonoBehaviour
     
     private void GroundJumpMech(float groundDrag)
     {
-        grounded = Physics.SphereCast(transform.position, sphereCastRadius, Vector3.down, out _, (playerHeight * 0.5f * sphereCastMultiplier), whatIsGround);
-        Physics.Raycast(transform.position, Vector3.down, out hit, (playerHeight * 0.5f * rayCastMultiplier), whatIsGround);
-        
-
         if (grounded)
         {
             rb.linearDamping = groundDrag;
@@ -181,6 +224,11 @@ public class playerMovement : MonoBehaviour
             if (tempMaxSpeed < 3f) tempMaxSpeed = 3f;
             LimitSpeed(tempMaxSpeed * jumpSpeedMultiplier);
         }
+    }
+    private void GroundCheck()
+    {
+        grounded = Physics.SphereCast(transform.position, sphereCastRadius, Vector3.down, out _, (playerHeight * 0.5f * sphereCastMultiplier), whatIsGround);
+        Physics.Raycast(transform.position, Vector3.down, out hit, (playerHeight * 0.5f * rayCastMultiplier), whatIsGround);
     }
     private void Movement(float multiplier, float moveSpeed, bool isInAir)
     {
@@ -240,19 +288,47 @@ public class playerMovement : MonoBehaviour
         player.transform.localScale = new Vector3(player.transform.localScale.x, 1f, player.transform.localScale.z);
         playerHeight = tempPlayerHeight;
     }
-    private void WallRun()
+    private void WallRunDetect()
     {
-        RaycastHit wallHit;
-        if (Physics.Raycast(orientation.transform.position, orientation.transform.right, out wallHit, wallDetectLength)) isWallRun = true;
-        else if (Physics.Raycast(orientation.transform.position, -(orientation.transform.right), out wallHit, wallDetectLength)) isWallRun = true;
-        else isWallRun = false;
-        //isWallRun = Physics.Raycast(orientation.transform.position, -(orientation.transform.right), out wallHit, wallDetectLength);
-        if (isWallRun)
+        if (!grounded && Vector3.ProjectOnPlane(rb.linearVelocity, Vector3.up).magnitude > minSpeed)
         {
-            //rb.AddForce(-wallHit.normal * wallHugForce * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            //airSpeedMultiplier = 1f;
+            if (Physics.Raycast(orientation.transform.position, orientation.transform.right, out wallHit, wallDetectLength)) IsWallRun = true;
+            else if (Physics.Raycast(orientation.transform.position, -(orientation.transform.right), out wallHit, wallDetectLength)) IsWallRun = true;
+            else IsWallRun = false;
         }
+        else IsWallRun = false;
+    }
 
+    private IEnumerator WallRun(RaycastHit wallhit)
+    {
+        float wallRunTime = 0f;
+        bool hasWallJumped = false;
+        Vector3 initialJump = Vector3.ProjectOnPlane(orientation.up, wallhit.normal);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        rb.AddForce(initialJump * initialUpForce, ForceMode.Impulse);
+        while (IsWallRun)
+        {
+            wallRunTime += Time.fixedDeltaTime;
+            tempMaxSpeed = Vector3.ProjectOnPlane(rb.linearVelocity, Vector3.up).magnitude / jumpSpeedMultiplier;
+            if (jumpAction.IsInProgress() && !hasWallJumped && wallRunTime > 0.1f)
+            {
+                hasWallJumped = true;
+                Vector3 direct = (Vector3.ProjectOnPlane(wallhit.normal, Vector3.up).normalized * sideWallJump) + (Vector3.up * upWallJump);
+                //Vector3 direct = Vector3.ProjectOnPlane(wallhit.normal, Vector3.up).normalized;
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                rb.AddForce(direct * wallJumpForce, ForceMode.Impulse);
+                yield return new WaitForSeconds(1f);
+            }
+            else
+            {
+                rb.AddForce(-wallhit.normal * wallHugForce * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                Vector3 wallMoveDirection = Vector3.ProjectOnPlane(orientation.forward, wallhit.normal).normalized;
+                rb.AddForce(wallMoveDirection * moveAction.ReadValue<Vector2>().y * wallRunForce, ForceMode.Force);
+                LimitSpeed(maxWallRunSpeed);
+            }
+            yield return new WaitForFixedUpdate();
+        }
+        
     }
     private void OnDrawGizmos()
     {
@@ -269,3 +345,4 @@ public class playerMovement : MonoBehaviour
     }
     
 }
+

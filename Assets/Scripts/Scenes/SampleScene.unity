@@ -5782,7 +5782,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 3
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -21833,7 +21833,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::playerMovement
   walkSpeed: 3
   sprintSpeed: 6
-  airSpeedMultiplier: 0.2
+  airSpeedMultiplier: 0.1
   groundDrag: 7.34
   orientation: {fileID: 58951629}
   airSpeedThreshold: 0.9
@@ -21856,10 +21856,15 @@ MonoBehaviour:
   impulseDuration: 0.2
   isAiming: 0
   moveVelocity: {x: 0, y: 0, z: 0}
-  wallRunSpeed: 0
-  wallJumpSpeed: 0
-  wallDetectLength: 1.22
-  wallHugForce: 14.02
+  wallRunForce: 38
+  wallJumpForce: 13
+  wallDetectLength: 0.75
+  wallHugForce: 12.6
+  initialUpForce: 15
+  sideWallJump: 0.7
+  upWallJump: 1
+  maxWallRunSpeed: 10
+  minSpeed: 5
 --- !u!1 &776039942
 GameObject:
   m_ObjectHideFlags: 0
